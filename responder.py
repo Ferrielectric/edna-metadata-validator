@@ -22,6 +22,8 @@ def answer(event, comments, offer):
     if event.get('comment') and incoming.get('user', {}).get('login') != issue.get('user', {}).get('login'):
         return None
     text = str(incoming.get('body') or '')[:12000]
+    if MARKER in text:
+        return None
     if re.search(r'\b(unsubscribe|stop replying|do not reply|stop contacting)\b', text, re.I):
         return None
     marker = MARKER + str(incoming.get('id')) + ' -->'
