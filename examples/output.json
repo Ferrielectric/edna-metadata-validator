@@ -1,0 +1,34 @@
+{
+  "summary": {
+    "total": 3,
+    "ready": 1,
+    "review": 1,
+    "invalid": 1
+  },
+  "records": [
+    {
+      "sampleId": "S1",
+      "row": 1,
+      "status": "ready",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "sampleId": "S2",
+      "row": 2,
+      "status": "review",
+      "errors": [],
+      "warnings": ["positive detection needs a confirmationMethod"]
+    },
+    {
+      "sampleId": "S3",
+      "row": 3,
+      "status": "invalid",
+      "errors": [
+        "latitude must be between -90 and 90",
+        "detectionCount must be an integer from 0 to replicateCount"
+      ],
+      "warnings": ["positive detection needs a confirmationMethod"]
+    }
+  ]
+}

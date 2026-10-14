@@ -1,0 +1,41 @@
+[
+  {
+    "sampleId": "S1",
+    "siteId": "RIVER-4",
+    "collectedAt": "2026-09-04T10:30:00Z",
+    "latitude": 43.7,
+    "longitude": -79.4,
+    "targetTaxon": "target-1",
+    "assay": "qPCR",
+    "replicateCount": 3,
+    "detectionCount": 0,
+    "positiveControl": true,
+    "negativeControl": true
+  },
+  {
+    "sampleId": "S2",
+    "siteId": "RIVER-4",
+    "collectedAt": "2026-09-04T10:30:00Z",
+    "latitude": 43.7,
+    "longitude": -79.4,
+    "targetTaxon": "target-1",
+    "assay": "qPCR",
+    "replicateCount": 3,
+    "detectionCount": 1,
+    "positiveControl": true,
+    "negativeControl": true
+  },
+  {
+    "sampleId": "S3",
+    "siteId": "RIVER-4",
+    "collectedAt": "2026-09-04T10:30:00Z",
+    "latitude": 100,
+    "longitude": -79.4,
+    "targetTaxon": "target-1",
+    "assay": "qPCR",
+    "replicateCount": 3,
+    "detectionCount": 4,
+    "positiveControl": true,
+    "negativeControl": true
+  }
+]

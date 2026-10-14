@@ -1,0 +1,14 @@
+name: Product question
+description: Ask about scope, format, price, licensing or delivery
+title: 'Product question: '
+body:
+  - type: markdown
+    attributes:
+      value: "Guilded's automated responder answers from the published offer. This is public: do not include datasets, private order links, payment credentials or personal details."
+  - type: textarea
+    id: question
+    attributes:
+      label: What would you like to know?
+      description: Use synthetic examples only.
+    validations:
+      required: true
