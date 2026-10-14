@@ -1,28 +1,15 @@
-name: Answer product questions
+name: Check product responder
 on:
-  issues:
-    types: [opened]
-  issue_comment:
-    types: [created]
+  push:
+    branches: [main]
 permissions:
   contents: read
-  issues: write
-concurrency:
-  group: product-question-${{ github.event.issue.number }}
-  cancel-in-progress: false
 jobs:
-  answer:
-    if: github.repository == 'Ferrielectric/edna-metadata-validator' && github.event.sender.type != 'Bot' && !github.event.issue.pull_request
+  test:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: main
           persist-credentials: false
-      - name: Test bounded responder
-        run: python3 -m unittest test_responder.py
-      - name: Answer from the published offer
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: python3 responder.py
+      - run: python3 -m unittest test_responder.py

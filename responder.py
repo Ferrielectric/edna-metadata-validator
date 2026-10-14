@@ -25,7 +25,7 @@ def answer(event, comments, offer):
     if re.search(r'\b(unsubscribe|stop replying|do not reply|stop contacting)\b', text, re.I):
         return None
     marker = MARKER + str(incoming.get('id')) + ' -->'
-    own = [c for c in comments if c.get('user', {}).get('login') == 'github-actions[bot]' and MARKER in str(c.get('body'))]
+    own = [c for c in comments if c.get('user', {}).get('login') == 'Ferrielectric' and MARKER in str(c.get('body'))]
     if any(marker in str(c.get('body')) for c in own) or len(own) >= 3:
         return None
     if any(re.search(r'\b(unsubscribe|stop replying|do not reply|stop contacting)\b', str(c.get('body') or ''), re.I) for c in comments if c.get('user', {}).get('login') == issue.get('user', {}).get('login')):
@@ -59,6 +59,12 @@ def main():
         req = urllib.request.Request('https://api.github.com/repos/' + REPOSITORY + path, data=None if body is None else json.dumps(body).encode(), headers={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json','User-Agent':'Guilded-validator-support'})
         with urllib.request.urlopen(req, timeout=20) as response:
             return json.load(response)
+    identity_request = urllib.request.Request('https://api.github.com/user', headers={'Authorization':'Bearer '+token,'User-Agent':'Guilded-validator-support'})
+    with urllib.request.urlopen(identity_request, timeout=20) as response:
+        if json.load(response).get('login') != 'Ferrielectric':
+            raise RuntimeError('Ferrielectric authentication required')
+    if api('').get('owner', {}).get('login') != 'Ferrielectric':
+        raise RuntimeError('Ferrielectric repository required')
     comments = api(f'/issues/{number}/comments?per_page=100')
     if len(comments) >= 100:
         return
