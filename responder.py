@@ -10,7 +10,7 @@ PRODUCT = 'b492b389-528e-4de9-8852-d894929e6273'
 OFFER = 'https://guilded.dev/products/edna-metadata-validator/?source=github-qa'
 MARKER = '<!-- guilded-validator-answer:'
 
-def answer(event, comments, offer):
+def answer(event, comments, offer, catalog=None):
     if event.get('repository', {}).get('full_name') != REPOSITORY:
         return None
     issue = event.get('issue', {})
@@ -32,6 +32,16 @@ def answer(event, comments, offer):
         return None
     if any(re.search(r'\b(unsubscribe|stop replying|do not reply|stop contacting)\b', str(c.get('body') or ''), re.I) for c in comments if c.get('user', {}).get('login') == issue.get('user', {}).get('login')):
         return None
+    full_text = str(issue.get('title') or '') + ' ' + text
+    if re.search(r'primer|biodiversity|integration module|swarm|catalog', full_text, re.I):
+        products = catalog or []
+        lines = []
+        for p in products[:3]:
+            if not re.fullmatch(r'[a-f0-9-]{36}', str(p.get('id',''))) or not isinstance(p.get('priceCents'), int) or not 100 <= p['priceCents'] <= 1900:
+                continue
+            title = re.sub(r'[^a-zA-Z0-9 ,().]', '', str(p.get('title','')))[:100]
+            lines.append(f"[{title}](https://guilded.dev/products/?product={p['id']}&source=github-qa): {p['priceCents']/100:g} USDC.")
+        return 'Guilded automated product response\n\n' + ('\n\n'.join(lines) if lines else 'The current swarm catalog could not be verified. Check https://guilded.dev/products/ for availability.') + '\n\nThese are downloadable local source packages created by the swarm. Review each offer’s illustrated input and output before buying. Automated VM tests are not scientific certification. No hosted service, custom work or ongoing support is included. Payment uses USDC on Base, with separate network fees. Delivery follows verified payment on your private order page. Do not post private data or order links here.\n\n' + marker
     if not offer or offer.get('priceCents') != 1900:
         return 'Guilded automated response: the current offer could not be verified, so I cannot quote an active sale. Please check [offer availability](' + OFFER + ').\n\n' + marker
     sections = []
@@ -80,7 +90,13 @@ def main():
             offer = None
     except Exception:
         offer = None
-    body = answer(event,comments,offer)
+    catalog = []
+    try:
+        with urllib.request.urlopen('https://guilded.dev/api/workspace?route=sales-catalog', timeout=20) as response:
+            catalog = [p for p in json.load(response).get('products', []) if datetime.fromisoformat(p['expiresAt'].replace('Z','+00:00')) > datetime.now(timezone.utc)]
+    except Exception:
+        pass
+    body = answer(event,comments,offer,catalog)
     if body:
         result = api(f'/issues/{number}/comments',{'body':body})
         print(json.dumps({'commentUrl':result['html_url'],'issue':number,'automated':True}))
