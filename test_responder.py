@@ -29,4 +29,9 @@ class Replies(unittest.TestCase):
     def test_missing_swarm_catalog_never_quotes_old_offer(self):
         r=answer(self.event('biodiversity module price?'),[],{'priceCents':1900},[])
         self.assertIn('could not be verified',r);self.assertNotIn('19 USDC',r)
+    def test_service_offer_is_verified_separately(self):
+        e=self.event('Can you do metadata cleanup as a service?')
+        self.assertIn('not currently accepting',answer(e,[],{'priceCents':1900}))
+        r=answer(e,[],None,[],{'available':True,'priceCents':900})
+        self.assertIn('9 USDC',r);self.assertIn('private service page',r);self.assertNotIn('19 USDC',r)
 if __name__=='__main__':unittest.main()
