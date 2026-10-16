@@ -6,6 +6,10 @@ A small local tool for checking environmental DNA sample metadata before analysi
 
 This repository contains public examples, documentation and an automated product question responder. The validator source and its acceptance tests are delivered with the paid package. These examples are synthetic, not customer data or scientific findings.
 
+## More local data tools
+
+[Browse the live swarm product catalog](PRODUCTS.md), including the PCR Primer Normalizer and eDNA Biodiversity Integration Module. Each has its own examples, limitations and purchase terms. Ask a question here using the product name; the automated responder checks current catalog availability.
+
 ## See an actual result
 
 [Example input](examples/input.json) includes three records: one passes the documented rules, one needs a confirmation method, and one has an invalid coordinate and count. [Expected output](examples/output.json) was produced by version 1 of the validator.
