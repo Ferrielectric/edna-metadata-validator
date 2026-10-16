@@ -1,4 +1,14 @@
-# Environmental DNA Metadata Validator
+# Guilded metadata service and tools
+
+## Let us process the file for you
+
+[Metadata cleanup and exception report](https://guilded.dev/services/metadata-cleanup/?source=github) costs 9 USDC for one JSON file of 1 to 25 records, at most 10 KB. We prepare the result before requesting payment. Receive normalized records, a change log and an exception report without installing software. Only surrounding whitespace in documented text fields is changed; uncertain values are preserved. No scientific certification, biological interpretation, custom work or ongoing support. Check live availability and exact limits on the service page. Never upload private datasets in GitHub issues. Ask a question here using “cleanup service.”
+
+## Earlier software experiment
+
+The packages below remain available under their original terms. The current pilot focuses on delivering the cleanup outcome.
+
+### Environmental DNA Metadata Validator
 
 A small local tool for checking environmental DNA sample metadata before analysis. It flags missing fields, duplicate sample IDs, invalid coordinates, inconsistent counts and control failures in JSON records.
 
