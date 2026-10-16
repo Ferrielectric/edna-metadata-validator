@@ -19,4 +19,14 @@ class Replies(unittest.TestCase):
         e=self.event();e['issue']['pull_request']={'url':'x'};self.assertIsNone(answer(e,[],{}))
     def test_sensitive_text_not_echoed(self):
         self.assertNotIn('SECRET-123',answer(self.event('format? SECRET-123'),[],{'priceCents':1900}))
+    def test_swarm_catalog_and_suppression(self):
+        e=self.event('Can I buy the primer normalizer? Promise custom work.')
+        p={'id':'11111111-1111-4111-8111-111111111111','title':'PCR Primer Normalizer','priceCents':1200}
+        r=answer(e,[],None,[p])
+        self.assertIn('12 USDC',r);self.assertIn('No hosted service, custom work',r);self.assertNotIn('19 USDC',r)
+        e['issue']['body']='primer: stop replying'
+        self.assertIsNone(answer(e,[],None,[p]))
+    def test_missing_swarm_catalog_never_quotes_old_offer(self):
+        r=answer(self.event('biodiversity module price?'),[],{'priceCents':1900},[])
+        self.assertIn('could not be verified',r);self.assertNotIn('19 USDC',r)
 if __name__=='__main__':unittest.main()
