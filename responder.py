@@ -10,7 +10,7 @@ PRODUCT = 'b492b389-528e-4de9-8852-d894929e6273'
 OFFER = 'https://guilded.dev/products/edna-metadata-validator/?source=github-qa'
 MARKER = '<!-- guilded-validator-answer:'
 
-def answer(event, comments, offer, catalog=None):
+def answer(event, comments, offer, catalog=None, service_offer=None):
     if event.get('repository', {}).get('full_name') != REPOSITORY:
         return None
     issue = event.get('issue', {})
@@ -33,6 +33,11 @@ def answer(event, comments, offer, catalog=None):
     if any(re.search(r'\b(unsubscribe|stop replying|do not reply|stop contacting)\b', str(c.get('body') or ''), re.I) for c in comments if c.get('user', {}).get('login') == issue.get('user', {}).get('login')):
         return None
     full_text = str(issue.get('title') or '') + ' ' + text
+    if re.search(r'cleanup|clean up|service|done for|exception report', full_text, re.I):
+        link='https://guilded.dev/services/metadata-cleanup/?source=github-qa'
+        if not service_offer or not service_offer.get('available') or service_offer.get('priceCents') != 900:
+            return 'Guilded automated response: the cleanup service is not currently accepting jobs. [Check availability](' + link + '). No payment is requested.\n\n' + marker
+        return 'Guilded automated service response\n\nWe can prepare a metadata cleanup and exception report for 9 USDC on Base, for one JSON file of 1 to 25 records and at most 10 KB. We trim documented text fields and flag metadata exceptions; uncertain numbers, coordinates and biological claims are unchanged. This is not scientific certification. Submit through the private service page, not this issue. We prepare the result before requesting payment; verified payment unlocks delivery. No custom work or ongoing support. Network fees are separate.\n\n[Review scope and submit a private job](' + link + ').\n\n' + marker
     if re.search(r'primer|biodiversity|integration module|swarm|catalog', full_text, re.I):
         products = catalog or []
         lines = []
@@ -96,7 +101,14 @@ def main():
             catalog = [p for p in json.load(response).get('products', []) if datetime.fromisoformat(p['expiresAt'].replace('Z','+00:00')) > datetime.now(timezone.utc)]
     except Exception:
         pass
-    body = answer(event,comments,offer,catalog)
+    service_offer = None
+    try:
+        req=urllib.request.Request('https://guilded.dev/api/workspace?route=metadata-service',data=json.dumps({'operation':'availability'}).encode(),headers={'Content-Type':'application/json'})
+        with urllib.request.urlopen(req,timeout=20) as response:
+            service_offer=json.load(response)
+    except Exception:
+        pass
+    body = answer(event,comments,offer,catalog,service_offer)
     if body:
         result = api(f'/issues/{number}/comments',{'body':body})
         print(json.dumps({'commentUrl':result['html_url'],'issue':number,'automated':True}))
