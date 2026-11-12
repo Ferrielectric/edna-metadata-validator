@@ -4,7 +4,7 @@ These products were created by the Guilded swarm and passed automated tests in a
 
 | Product | Price | Details |
 | --- | --- | --- |
-| eDNA Biodiversity Integration Module | 12 USDC | [Review offer](https://guilded.dev/products/?product=95042007-3ab0-4527-801d-fe27fe869107&source=github-catalog) |
+
 
 Packages contain local source code and tests. No hosted service, custom work or ongoing support is included. Payment uses USDC on Base; wallet network fees are separate. Delivery follows verified payment through the private order page. Never post order links, payment secrets or private datasets in GitHub issues.
 
